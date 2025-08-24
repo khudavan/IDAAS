@@ -1,4 +1,3 @@
-// server/routes/adminRoutes.js
 import express from 'express';
 import { authRequired, adminOnly } from '../middleware/authMiddleware.js';
 import { listUsers, createUser, updateUser, removeUser, findUserById } from '../models/userModel.js';
@@ -38,7 +37,7 @@ router.put('/users/:id', authRequired, adminOnly, async (req, res) => {
     const u = await findUserById(req.params.id);
     if (!u) return res.status(404).json({ error: 'not found' });
 
-    // 🚫 Prevent editing the system admin from .env
+    // Prevent editing the system admin from .env
     if (u.email.toLowerCase().trim() === process.env.ADMIN_EMAIL.toLowerCase().trim()) {
       return res.status(403).json({ error: 'System admin cannot be edited' });
     }
@@ -59,7 +58,7 @@ router.delete('/users/:id', authRequired, adminOnly, async (req, res) => {
     const u = await findUserById(req.params.id);
     if (!u) return res.status(404).json({ error: 'not found' });
 
-    // 🚫 Prevent deletion of system admin from .env
+    // Prevent deletion of system admin from .env
     if (u.email.toLowerCase().trim() === process.env.ADMIN_EMAIL.toLowerCase().trim()) {
       return res.status(403).json({ error: 'System admin cannot be deleted' });
     }
@@ -72,7 +71,7 @@ router.delete('/users/:id', authRequired, adminOnly, async (req, res) => {
   }
 });
 
-// user policy get/put
+
 router.get('/users/:id/policy', authRequired, adminOnly, async (req, res) => {
   const u = await findUserById(req.params.id);
   if (!u) return res.status(404).json({ error: 'not found' });
@@ -84,7 +83,7 @@ router.put('/users/:id/policy', authRequired, adminOnly, async (req, res) => {
     const u = await findUserById(req.params.id);
     if (!u) return res.status(404).json({ error: 'not found' });
 
-    // 🚫 Prevent editing system admin's policy
+    // Prevent editing system admin's policy
     if (u.email.toLowerCase().trim() === process.env.ADMIN_EMAIL.toLowerCase().trim()) {
       return res.status(403).json({ error: 'System admin policy cannot be edited' });
     }
@@ -154,25 +153,7 @@ router.get("/admin-info", (req, res) => {
   res.json({ email: process.env.ADMIN_EMAIL || null });
 });
 
-// // Admin: view all login activities
-// router.get("/reports/login-activity", authRequired, adminOnly, async (req, res) => {
-//   try {
-//     const logs = await prisma.loginActivity.findMany({
-//       orderBy: { createdAt: "desc" },
-//       include: {
-//         user: {
-//           select: { id: true, name: true, email: true, role: true }
-//         }
-//       }
-//     });
-//     res.json(logs);
-//   } catch (err) {
-//     console.error("Error fetching login report:", err);
-//     res.status(500).json({ error: "Failed to fetch report" });
-//   }
-// });
-
-// ✅ Admin: view all login activities
+// Admin: view all login activities
 router.get("/login-activity", authRequired, adminOnly, async (req, res) => {
   try {
     const logs = await prisma.loginActivity.findMany({

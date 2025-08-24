@@ -1,4 +1,3 @@
-// server/models/tokenModel.js
 import { getPrisma } from '../config/db.js';
 import { v4 as uuid } from 'uuid';
 const prisma = getPrisma();
@@ -21,40 +20,3 @@ export async function saveTokens(toks) {
   }
   return listTokens();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// // server/models/tokenModel.js
-// // Placeholder for tokens (access/refresh) persistence. Currently tokens are stateless JWTs.
-// // When refresh tokens are needed, implement persistence here.
-
-// import { readJson, writeJson } from './_storage.js';
-// const FNAME = 'tokens.json';
-
-// export async function listTokens() {
-//   return await readJson(FNAME, []);
-// }
-// export async function saveTokens(toks) {
-//   await writeJson(FNAME, toks);
-// }

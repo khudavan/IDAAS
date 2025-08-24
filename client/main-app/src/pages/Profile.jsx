@@ -1,4 +1,3 @@
-// src/pages/Profile.jsx
 import { useEffect, useState } from "react";
 import {
   Alert,
@@ -107,53 +106,3 @@ export default function Profile() {
     </AppLayout>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-// // src/pages/Profile.jsx
-// import { useEffect, useState } from "react";
-// import { Alert, Paper, Stack, Typography } from "@mui/material";
-// import API from "../api/api";
-// import AppLayout from "../components/AppLayout";
-
-// export default function Profile() {
-//   const [profile, setProfile] = useState(null);
-//   const [err, setErr] = useState("");
-
-//   useEffect(() => {
-//     async function load() {
-//       try {
-//         const { data } = await API.get("/main/profile");
-//         setProfile(data);
-//       } catch {
-//         setErr("Failed to load profile.");
-//       }
-//     }
-//     load();
-//   }, []);
-
-//   return (
-//     <AppLayout>
-//       <Typography variant="h4" gutterBottom>Profile</Typography>
-//       {err && <Alert severity="error">{err}</Alert>}
-//       {profile && (
-//         <Paper sx={{ p: 2 }}>
-//           <Stack spacing={1}>
-//             <Typography><b>Name:</b> {profile.name}</Typography>
-//             <Typography><b>Email:</b> {profile.email}</Typography>
-//             <Typography><b>Role:</b> {profile.role}</Typography>
-//             <Typography variant="caption">User ID: {profile.id}</Typography>
-//           </Stack>
-//         </Paper>
-//       )}
-//     </AppLayout>
-//   );
-// }

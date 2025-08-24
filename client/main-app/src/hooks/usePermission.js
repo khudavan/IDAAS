@@ -1,11 +1,6 @@
-// src/hooks/usePermission.js
 import { useEffect, useState } from "react";
 import API from "../api/api";
 
-/**
- * Checks permission by calling backend:
- * POST /main/permissions/check { action, resource } -> { allow: boolean }
- */
 export default function usePermission(action, resource) {
   const [allowed, setAllowed] = useState(false);
   const [checking, setChecking] = useState(true);

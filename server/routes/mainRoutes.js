@@ -1,4 +1,3 @@
-// server/routes/mainRoutes.js
 import express from 'express';
 import { authRequired, adminOnly } from '../middleware/authMiddleware.js';
 import { enforce, hasPermission } from '../middleware/policyMiddleware.js';
@@ -11,7 +10,6 @@ const router = express.Router();
 // health
 router.get('/health', (_req, res) => res.json({ ok: true }));
 
-// dashboard - requires read on service:dashboard
 router.get(
   "/dashboard",
   authRequired,
@@ -21,15 +19,11 @@ router.get(
       const userId = req.user?.sub || req.user?.id;
       const user = await findUserById(userId);
 
-      // 🔹 Alerts
       const alerts = await listAlerts();
       const alertCount = alerts.length;
 
-      // 🔹 Reports (replace with real prisma query if you have Report model)
-      // Example: const reportCount = await prisma.report.count();
       const reportCount = 12;
 
-      // 🔹 Last login (assumes user has lastLogin field, fallback to createdAt)
       const lastLogin = user?.lastLogin || user?.createdAt;
 
       res.json({
@@ -56,7 +50,7 @@ router.get('/reports', authRequired, enforce('read', 'service:reports'), async (
   });
 });
 
-// create report (write permission)
+// create report
 router.post('/reports', authRequired, enforce('write', 'service:reports'), async (req, res) => {
   const { name } = req.body || {};
   if (!name) return res.status(400).json({ error: 'name required' });
@@ -94,28 +88,5 @@ router.post('/permissions/check', authRequired, async (req, res) => {
   const allow = hasPermission(user.policy || {}, action, resource);
   res.json({ allow });
 });
-
-// // Get login activity report (only admins)
-// router.get("/reports/login-activity", authRequired, adminOnly, async (req, res) => {
-//   if (req.user.role !== "ADMIN") {
-//     return res.status(403).json({ error: "Forbidden" });
-//   }
-
-//   try {
-//     const logs = await prisma.loginActivity.findMany({
-//       orderBy: { createdAt: "desc" },
-//       take: 50,
-//       include: {
-//         user: {
-//           select: { id: true, email: true, name: true },
-//         },
-//       },
-//     });
-//     res.json(logs);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ error: "Server error" });
-//   }
-// });
 
 export default router;

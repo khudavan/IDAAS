@@ -1,4 +1,3 @@
-// server/models/alertModel.js
 import { getPrisma } from "../config/db.js";
 
 // Create alert
@@ -9,7 +8,7 @@ export async function createAlert({ type, message, severity = "info", userId }) 
       type,
       message,
       severity,
-      userId: userId || null,   // ✅ keep UUID string, no parseInt
+      userId: userId || null,
     },
   });
 }
@@ -25,7 +24,6 @@ export async function listAlerts() {
   });
 }
 
-// List alerts for a given user (global + user-specific)
 export async function listUserAlerts(userId) {
   const prisma = getPrisma();
   return prisma.alert.findMany({

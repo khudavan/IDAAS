@@ -1,4 +1,3 @@
-// src/pages/Login.jsx
 import { useState } from "react";
 import {
   Box,
@@ -56,7 +55,7 @@ export default function Login() {
         },
       }}
     >
-      {/* Motivational Heading */}
+    
       <motion.div
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -76,7 +75,6 @@ export default function Login() {
         </Typography>
       </motion.div>
 
-      {/* Login Card */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -188,7 +186,6 @@ export default function Login() {
             }}
           />
 
-          {/* Back Button */}
             <Button
               fullWidth
               size="large"
@@ -203,7 +200,7 @@ export default function Login() {
                   color: "#764ba2",
                 },
               }}
-              onClick={() => navigate("/")}   // ✅ always navigate to home, no reload
+              onClick={() => navigate("/")}
             >
               ⬅ Back
             </Button>

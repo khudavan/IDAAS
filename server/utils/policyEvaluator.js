@@ -1,5 +1,3 @@
-// server/utils/policyEvaluator.js
-// exported for re-use in future. Uses same logic as middleware.
 export function hasPermission(policyDoc, action, resource) {
   const statements = policyDoc?.statements || [];
 

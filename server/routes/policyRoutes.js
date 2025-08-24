@@ -1,4 +1,3 @@
-// server/routes/policyRoutes.js
 import express from 'express';
 import { authRequired, adminOnly } from '../middleware/authMiddleware.js';
 import { listTemplates, saveTemplates } from '../models/policyModel.js';
@@ -6,21 +5,16 @@ import { listUsers, updateUser, findUserById } from '../models/userModel.js';
 
 const router = express.Router();
 
-// ---------------- Templates ----------------
-
-// Admin: list templates
 router.get('/templates', authRequired, adminOnly, async (_req, res) => {
   const t = await listTemplates();
   res.json(t);
 });
 
-// Admin: save templates
 router.put('/templates', authRequired, adminOnly, async (req, res) => {
   await saveTemplates(req.body || []);
   res.json({ ok: true });
 });
 
-// ---------------- Users ----------------
 
 // Admin: list all users
 router.get('/users', authRequired, adminOnly, async (_req, res) => {
@@ -45,46 +39,3 @@ router.put('/users/:id', authRequired, adminOnly, async (req, res) => {
 });
 
 export default router;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// // server/routes/policyRoutes.js
-// import express from 'express';
-// import { authRequired, adminOnly } from '../middleware/authMiddleware.js';
-// import { listTemplates, saveTemplates } from '../models/policyModel.js';
-
-// const router = express.Router();
-
-// // Admin: list templates
-// router.get('/templates', authRequired, adminOnly, async (_req, res) => {
-//   const t = await listTemplates();
-//   res.json(t);
-// });
-
-// // Admin: save templates
-// router.put('/templates', authRequired, adminOnly, async (req, res) => {
-//   await saveTemplates(req.body || []);
-//   res.json({ ok: true });
-// });
-
-// export default router;

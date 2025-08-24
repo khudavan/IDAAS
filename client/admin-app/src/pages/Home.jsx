@@ -13,7 +13,7 @@ export default function Home() {
         transition={{ duration: 0.8 }}
         className="text-center max-w-4xl"
       >
-        {/* Icon */}
+        
         <div className="flex justify-center mb-6">
           <div className="p-4 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg">
             <svg
@@ -26,7 +26,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Title */}
+        
         <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-700">
           Permission Management <span className="text-black">System</span>
         </h1>
@@ -35,9 +35,9 @@ export default function Home() {
           and comprehensive user management for secure application environments.
         </p>
 
-        {/* Cards */}
+        
         <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Admin Portal */}
+          
           <motion.div
             whileHover={{ scale: 1.05 }}
             className="bg-white rounded-2xl p-6 shadow-xl flex flex-col items-center"
@@ -63,7 +63,7 @@ export default function Home() {
             </button>
           </motion.div>
 
-          {/* Main Application */}
+          
           <motion.div
             whileHover={{ scale: 1.05 }}
             className="bg-white rounded-2xl p-6 shadow-xl flex flex-col items-center"
@@ -93,36 +93,3 @@ export default function Home() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import { Box, Button, Typography } from "@mui/material";
-// import { useNavigate } from "react-router-dom";
-
-// export default function Home() {
-//   const navigate = useNavigate();
-//   return (
-//     <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" height="100vh">
-//       <Typography variant="h3" gutterBottom>IDaaS Platform</Typography>
-//       <Box display="flex" gap={2}>
-//         <Button variant="contained" color="primary" onClick={() => navigate("/login")}>
-//           Admin Login
-//         </Button>
-//         <Button variant="outlined" color="secondary" onClick={() => window.location.href="http://localhost:5174"}>
-//           User Login
-//         </Button>
-//       </Box>
-//     </Box>
-//   );
-// }

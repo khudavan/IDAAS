@@ -1,4 +1,3 @@
-// src/pages/Home.jsx
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import { User, Shield } from "lucide-react";
@@ -12,7 +11,7 @@ export default function Home() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        {/* Title */}
+        
         <motion.h1
           className="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-6"
           initial={{ scale: 0.9 }}
@@ -22,7 +21,6 @@ export default function Home() {
           Identity-as-a-Service
         </motion.h1>
 
-        {/* Subtitle */}
         <motion.p
           className="text-lg md:text-xl text-gray-700 mb-10"
           initial={{ opacity: 0 }}
@@ -32,14 +30,13 @@ export default function Home() {
           Secure access management for users and administrators
         </motion.p>
 
-        {/* Cards Section */}
         <motion.div
           className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.8 }}
         >
-          {/* User Login Card */}
+      
           <div className="p-6 bg-white rounded-2xl shadow-md text-center">
             <div className="flex justify-center">
               <div className="p-4 rounded-xl bg-gradient-to-r from-indigo-400 to-indigo-600 text-white">
@@ -58,7 +55,6 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Admin Portal Card */}
           <div className="p-6 bg-white rounded-2xl shadow-md text-center">
             <div className="flex justify-center">
               <div className="p-4 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white">

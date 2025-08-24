@@ -1,10 +1,5 @@
-// server/middleware/policyMiddleware.js
 import { findUserById } from '../models/userModel.js';
 
-/**
- * hasPermission(policyDoc, action, resource)
- * Basic evaluator: checks statements array, supports '*' wildcard.
- */
 export function hasPermission(policyDoc, action, resource) {
   const statements = policyDoc?.statements || [];
 
@@ -28,9 +23,6 @@ export function hasPermission(policyDoc, action, resource) {
   return !!allowed;
 }
 
-/**
- * Express middleware factory: enforce(action, resource)
- */
 export function enforce(action, resource) {
   return async (req, res, next) => {
     try {

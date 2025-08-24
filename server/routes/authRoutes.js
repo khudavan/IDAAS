@@ -1,4 +1,3 @@
-// server/routes/authRoutes.js
 import express from "express";
 import jwt from "jsonwebtoken";
 import { v4 as uuid } from "uuid";
@@ -37,15 +36,12 @@ const TEMPLATE_POLICY_FILE = path.resolve(
   "iam-policy-template.json"
 );
 
-/**
- * Seed initial admin user if DB is empty
- */
 async function ensureAdmin() {
   try {
     const users = await listUsers();
     if (!users || users.length === 0) {
-      const adminPassword = process.env.ADMIN_PASSWORD || "Admin@123";
-      const adminEmail = process.env.ADMIN_EMAIL || "admin@example.com";
+      const adminPassword = process.env.ADMIN_PASSWORD;
+      const adminEmail = process.env.ADMIN_EMAIL;
 
       const tpl = JSON.parse(await fs.readFile(TEMPLATE_POLICY_FILE, "utf-8"));
 
@@ -58,7 +54,7 @@ async function ensureAdmin() {
       });
 
       console.log(
-        `✅ Seeded admin account -> Email: ${adminEmail} | Password: ${adminPassword}`
+        `Seeded admin account -> Email: ${adminEmail} | Password: ${adminPassword}`
       );
     }
   } catch (err) {
@@ -69,10 +65,6 @@ async function ensureAdmin() {
 // Ensure admin at startup
 await ensureAdmin();
 
-/**
- * @route POST /auth/login
- * @desc Authenticate user and issue JWT
- */
 // User Login
 router.post("/login", async (req, res) => {
   try {
@@ -84,7 +76,6 @@ router.post("/login", async (req, res) => {
 
     const user = await findUserByEmail(email);
     if (!user) {
-      // ❌ Log failed attempt for unknown user
       await prisma.loginActivity.create({
         data: {
           userId: null,
@@ -99,7 +90,6 @@ router.post("/login", async (req, res) => {
 
     const ok = await verifyPassword(user, password);
     if (!ok) {
-      // ❌ Log failed attempt with known user
       await prisma.loginActivity.create({
         data: {
           userId: user.id,
@@ -112,7 +102,7 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    // ✅ Successful login → update lastLogin
+    // Successful login → update lastLogin
     await prisma.user.update({
       where: { id: user.id },
       data: { lastLogin: new Date() },
@@ -121,7 +111,6 @@ router.post("/login", async (req, res) => {
     const payload = { sub: user.id, email: user.email, role: user.role };
     const token = jwt.sign(payload, SECRET, { expiresIn: TTL });
 
-    // ✅ Log successful attempt
     await prisma.loginActivity.create({
       data: {
         userId: user.id,
@@ -147,51 +136,6 @@ router.post("/login", async (req, res) => {
   }
 });
 
-
-
-// // User Login
-// router.post("/login", async (req, res) => {
-//   try {
-//     const { email, password } = req.body || {};
-
-//     if (!email || !password) {
-//       return res.status(400).json({ error: "Email and password are required" });
-//     }
-
-//     const user = await findUserByEmail(email);
-//     if (!user) return res.status(401).json({ error: "Invalid credentials" });
-
-//     const ok = await verifyPassword(user, password);
-//     if (!ok) return res.status(401).json({ error: "Invalid credentials" });
-
-//     // 🔹 Update last login
-//     await prisma.user.update({
-//       where: { id: user.id },
-//       data: { lastLogin: new Date() },
-//     });
-
-//     const payload = { sub: user.id, email: user.email, role: user.role };
-//     const token = jwt.sign(payload, SECRET, { expiresIn: TTL });
-
-//     return res.json({
-//       token,
-//       user: {
-//         id: user.id,
-//         name: user.name,
-//         email: user.email,
-//         role: user.role,
-//       },
-//     });
-//   } catch (err) {
-//     console.error("Login error:", err.message);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// });
-
-/**
- * @route GET /auth/me
- * @desc Return current authenticated user
- */
 router.get("/me", authRequired, async (req, res) => {
   try {
     const userId = req.user?.sub || req.user?.id;
@@ -208,60 +152,7 @@ router.get("/me", authRequired, async (req, res) => {
   }
 });
 
-/**
- * @route POST /auth/google
- * @desc Login/signup with Google ID Token
- */
-// router.post("/google", async (req, res) => {
-//   try {
-//     const { credential } = req.body; // from frontend Google login
-//     if (!credential) return res.status(400).json({ error: "Missing credential" });
-
-//     // Verify Google token
-//     const ticket = await googleClient.verifyIdToken({
-//       idToken: credential,
-//       audience: process.env.GOOGLE_CLIENT_ID,
-//     });
-
-//     const payload = ticket.getPayload();
-//     const email = payload.email;
-//     const name = payload.name;
-
-//     // Find existing user or create new
-//     let user = await findUserByEmail(email);
-//     if (!user) {
-//       const tpl = JSON.parse(await fs.readFile(TEMPLATE_POLICY_FILE, "utf-8"));
-//       user = await createUser({
-//         name,
-//         email,
-//         password: uuid(), // random password, not used
-//         role: "user",
-//         policy: tpl,
-//       });
-//     }
-
-//     // Issue JWT from *your system*
-//     const jwtPayload = { sub: user.id, email: user.email, role: user.role };
-//     const token = jwt.sign(jwtPayload, SECRET, { expiresIn: TTL });
-
-//     res.json({
-//       token,
-//       user: {
-//         id: user.id,
-//         name: user.name,
-//         email: user.email,
-//         role: user.role,
-//       },
-//     });
-//   } catch (err) {
-//     console.error("Google login error:", err.message);
-//     res.status(401).json({ error: "Invalid Google login" });
-//   }
-// });
-
-// ================================
-// GOOGLE LOGIN (fixed with googleClient)
-// ================================
+// GOOGLE LOGIN
 router.post("/google", async (req, res) => {
   try {
     // accept both "credential" (from Google One Tap) and "token" (mobile/web OAuth)
@@ -270,7 +161,7 @@ router.post("/google", async (req, res) => {
       return res.status(400).json({ error: "Google token is required" });
     }
 
-    // ✅ Verify Google token using googleClient
+    // Verify Google token using googleClient
     const ticket = await googleClient.verifyIdToken({
       idToken,
       audience: process.env.GOOGLE_CLIENT_ID,
@@ -279,7 +170,7 @@ router.post("/google", async (req, res) => {
     const payload = ticket.getPayload();
     const { email, name, picture } = payload;
 
-    // ✅ Find or create user
+    // Find or create user
     let user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
       user = await prisma.user.create({
@@ -287,17 +178,16 @@ router.post("/google", async (req, res) => {
           email,
           name: name || "Google User",
           profilePic: picture || null,
-          // provider: "GOOGLE",
         },
       });
     }
 
-    // ✅ Generate JWT
+    // Generate JWT
     const jwtToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
 
-    // ✅ Log Google login attempt (success)
+    // Log Google login attempt (success)
     await prisma.loginActivity.create({
       data: {
         userId: user.id,
@@ -320,7 +210,7 @@ router.post("/google", async (req, res) => {
   } catch (err) {
     console.error("Google login error:", err.message);
 
-    // ❌ Log failed attempt
+    // Log failed attempt
     try {
       await prisma.loginActivity.create({
         data: {

@@ -1,4 +1,3 @@
-// server/utils/generateToken.js
 import jwt from 'jsonwebtoken';
 const SECRET = process.env.JWT_SECRET || 'dev-secret-key';
 const TTL = process.env.JWT_TTL || '1h';

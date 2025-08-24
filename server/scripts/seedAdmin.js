@@ -24,7 +24,7 @@ async function run() {
   const policyPath = path.resolve(__dirname, '..', 'permissions', 'iam-policy-template.json');
   const tpl = JSON.parse(await fs.readFile(policyPath, 'utf-8'));
 
-  // ✅ Must pass Prisma enum value
+  // Must pass Prisma enum value
   const admin = await createUser({
     name: 'System Admin',
     email: adminEmail,
@@ -33,12 +33,12 @@ async function run() {
     policy: tpl
   });
 
-  console.log(`✅ Seeded admin: ${admin.email} (role: ${admin.role})`);
+  console.log(`Seeded admin: ${admin.email} (role: ${admin.role})`);
   await prisma.$disconnect();
 }
 
 run().catch(async (e) => {
-  console.error('❌ Seeding failed:', e);
+  console.error('Seeding failed:', e);
   const prisma = getPrisma();
   await prisma.$disconnect();
   process.exit(1);

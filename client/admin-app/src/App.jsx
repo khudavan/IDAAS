@@ -1,6 +1,6 @@
 import React from "react";
 import AppRoutes from "./routes.jsx";
-import "./index.css"; // optional if you use global CSS
+import "./index.css";
 
 export default function App() {
   return (

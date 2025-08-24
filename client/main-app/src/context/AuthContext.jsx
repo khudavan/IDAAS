@@ -1,4 +1,3 @@
-// src/context/AuthContext.jsx
 import { createContext, useContext, useEffect, useState } from "react";
 import API from "../api/api";
 
@@ -30,7 +29,7 @@ export function AuthProvider({ children }) {
   const login = (tkn, usr) => {
     localStorage.setItem("token", tkn);
     setToken(tkn);
-    setUser(usr || null); // backend /auth/login returns { token, user }
+    setUser(usr || null);
   };
 
   const logout = () => {
