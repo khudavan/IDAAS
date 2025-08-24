@@ -1,0 +1,10 @@
+{
+  "version": "2025-08-01",
+  "statements": [
+    {
+      "action": ["read", "write"],
+      "resource": ["service:dashboard", "service:reports", "service:users"],
+      "effect": "allow"
+    }
+  ]
+}

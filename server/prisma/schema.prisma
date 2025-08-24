@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  name         String
+  email        String   @unique
+  role         Role     @default(USER)
+  passwordHash String?
+  profilePic   String?
+  provider     String    @default("LOCAL")
+  policy       Json     @default("{}")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  lastLogin    DateTime?
+
+  alerts Alert[]
+  loginLogs    LoginActivity[] @relation("UserLoginLogs")
+}
+
+model PolicyTemplate {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  document  Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OAuthClient {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  clientId  String   @unique
+  secret    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Token {
+  id        String   @id @default(uuid()) @db.Uuid
+  subject   String
+  type      String   // "refresh" (future), etc.
+  meta      Json
+  createdAt DateTime @default(now())
+  revokedAt DateTime?
+}
+
+model Alert {
+  id        Int      @id @default(autoincrement())
+  type      String
+  message   String
+  severity  String   @default("info")
+  createdAt DateTime @default(now())
+
+  // relation to User (UUID string)
+  userId String? @db.Uuid
+  user   User?   @relation(fields: [userId], references: [id])
+}
+
+model LoginActivity {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String?  @db.Uuid
+  email     String
+  success   Boolean
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  user User? @relation("UserLoginLogs", fields: [userId], references: [id])
+}
