@@ -1,0 +1,47 @@
+name: Deploy server (Elastic Beanstalk)
+on:
+  push:
+    paths:
+      - "server/**"
+      - ".github/workflows/deploy-server.yml"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install server deps & build
+        working-directory: server
+        run: |
+          npm ci
+          npm run build || true
+
+      - name: Zip bundle
+        run: |
+          cd server
+          zip -r ../server.zip . -x "node_modules/*"
+
+      - name: Configure AWS (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v22
+        with:
+          application_name: ${{ secrets.EB_APP_NAME }}
+          environment_name: ${{ secrets.EB_ENV_NAME }}
+          version_label: ${{ github.run_number }}-${{ github.sha }}
+          region: ${{ secrets.AWS_REGION }}
+          deployment_package: server.zip
