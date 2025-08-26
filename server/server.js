@@ -49,7 +49,7 @@ process.on('SIGTERM', async () => {
   process.exit(0);
 });
 
-// app.listen(PORT, () => {
-//   // eslint-disable-next-line no-console
-//   console.log(`API listening on ${PORT}`);
-// });
+app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
+  console.log(`API listening on ${PORT}`);
+});

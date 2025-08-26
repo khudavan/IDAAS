@@ -1,15 +1,23 @@
-# Use the official AWS Lambda Node.js base image
-FROM public.ecr.aws/lambda/nodejs:20
+# Use official Node.js LTS image
+FROM node:20-alpine
 
-# Set the working directory
+# Set working directory inside container
 WORKDIR /app
 
-# Copy package.json and install dependencies
-COPY ./server/package*.json ./
-RUN npm ci --only=production
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
-# Copy the rest of the application code
-COPY ./server .
+# Install dependencies
+RUN npm install
 
-# Specify the command to run the application (your entrypoint file)
-CMD ["app.handler"]
+# Copy the rest of the application
+COPY . .
+
+# Generate Prisma client
+RUN npx prisma generate
+
+# Expose application port
+EXPOSE 5000
+
+# Start application
+CMD ["npm", "start"]
