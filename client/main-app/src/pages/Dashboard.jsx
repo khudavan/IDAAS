@@ -36,13 +36,6 @@ export default function Dashboard() {
 
   const cards = [
     {
-      label: "Reports",
-      value: stats?.reports,
-      icon: <Assessment fontSize="large" />,
-      color: "linear-gradient(135deg, #667eea, #764ba2)",
-      progress: 75,
-    },
-    {
       label: "Alerts",
       value: stats?.alerts,
       icon: <Notifications fontSize="large" />,

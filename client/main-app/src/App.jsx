@@ -2,7 +2,6 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import Reports from "./pages/Reports";
 import Profile from "./pages/Profile";
 import Alerts from "./pages/Alerts"; 
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -19,14 +18,6 @@ export default function App() {
         element={
           <ProtectedRoute>
             <Dashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/reports"
-        element={
-          <ProtectedRoute>
-            <Reports />
           </ProtectedRoute>
         }
       />
