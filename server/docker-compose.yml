@@ -6,7 +6,7 @@ services:
     container_name: khudaidaas-api
     restart: unless-stopped
     ports:
-      - "80:5000"     # expose container port 5000 as host 80
+      - "5000:5000"     # expose container port 5000 as host 80
     env_file:
       - .env
     # (Optional) Uncomment to see logs in the host docker logs by default
