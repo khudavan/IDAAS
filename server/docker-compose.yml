@@ -1,16 +1,16 @@
 version: "3.9"
 
 services:
-  server:
-    build: ./server
-    container_name: idaas-server
-    restart: always
+  api:
+    build: .
+    container_name: khudaidaas-api
+    restart: unless-stopped
     ports:
-      - "5000:5000"
-    environment:
-      # Connect directly to AWS RDS (Postgres)
-      DATABASE_URL: "postgresql://idaas:Khuda%24Wan123@db-idaas.c5sokkgegir3.eu-west-1.rds.amazonaws.com:5432/postgres?schema=public&sslmode=require"
-      NODE_ENV: production
-    volumes:
-      - ./server:/app
-      - /app/node_modules
+      - "80:5000"     # expose container port 5000 as host 80
+    env_file:
+      - .env
+    # (Optional) Uncomment to see logs in the host docker logs by default
+    # logging:
+    #   driver: "json-file"
+    #   options:
+    #     max-size: "10m"

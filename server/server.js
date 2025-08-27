@@ -20,8 +20,12 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Load CORS origins from env (comma-separated). Fallback to localhost dev ports.
+const rawOrigins = process.env.CORS_ORIGINS || 'http://localhost:5173,http://localhost:5174';
+const allowedOrigins = rawOrigins.split(',').map(s => s.trim()).filter(Boolean);
+
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:5174"],
+  origin: allowedOrigins,
   credentials: true
 }));
 

@@ -1,23 +1,28 @@
-# Use official Node.js LTS image
-FROM node:20-alpine
+# Use Debian-based Node (Prisma + OpenSSL friendly)
+FROM node:20-bookworm-slim
 
-# Set working directory inside container
+# Install minimal system deps needed by Prisma/OpenSSL
+RUN apt-get update && \
+    apt-get install -y openssl ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+ENV NODE_ENV=production
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy package metadata and install dependencies (cache layer)
 COPY package*.json ./
+RUN npm ci --production
 
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the application
-COPY . .
-
-# Generate Prisma client
+# Copy Prisma schema and generate client
+COPY prisma ./prisma
 RUN npx prisma generate
 
-# Expose application port
+# Copy rest of the source
+COPY . .
+
+# Expose the port your app listens on (your .env uses 5000)
+ENV PORT=5000
 EXPOSE 5000
 
-# Start application
-CMD ["npm", "start"]
+# Run DB migrations (if any) then start the server
+CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]
