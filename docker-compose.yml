@@ -8,27 +8,9 @@ services:
     ports:
       - "5000:5000"
     environment:
-      # Prisma database connection (Postgres)
-      DATABASE_URL: postgres://postgres:postgres@db:5432/idaas
+      # Connect directly to AWS RDS (Postgres)
+      DATABASE_URL: "postgresql://idaas:Khuda%24Wan123@db-idaas.c5sokkgegir3.eu-west-1.rds.amazonaws.com:5432/postgres?schema=public&sslmode=require"
       NODE_ENV: production
-    depends_on:
-      - db
     volumes:
       - ./server:/app
       - /app/node_modules
-
-  db:
-    image: postgres:15-alpine
-    container_name: idaas-db
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: idaas
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  postgres_data:
